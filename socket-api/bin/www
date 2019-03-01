@@ -24,23 +24,23 @@ const server = http.createServer(app);
 global.io = require('socket.io')(server);
 
 io.on('connection', socket => {
-  console.log('a user connected')
+
+  // io.emit('userEntered', 'Um novo usuário acabou de entrar')
+
+  // socket.on('disconnection', event => io.emit('userLeft', 'Um usuário deixou a conversa'))
   
-  socket.on('chat', message => {
-    io.emit('chatRoom', message);
+  socket.on('chat', data => {
+    /** Filter html tags */
+    data.content = data.content.replace('/<\/?[^>]+(>|$)/g', '');
+    
+    io.emit('chatRoom', data);
   });
 
-  socket.on('typing', content => {
-    console.log('Event')
-    
-    if (content.condition) {
-      console.log('Start typing: ', content)
-      
+  socket.on('typing', content => {  
+    if (content.condition) {   
       io.emit('whoIsTyping', {user: content.user, message: `${content.user} está digitando uma mensagem`})
-    } else {
-      console.log(`Stop typing: ${content}`)
-      
-      io.emit('whoIsTyping', {user: content.user, message: 'A beautiful world'})
+    } else {     
+      io.emit('whoIsTyping', {user: content.user, message: 'A beautiful World'})
     }
 });
 })

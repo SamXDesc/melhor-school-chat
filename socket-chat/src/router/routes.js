@@ -2,9 +2,16 @@
 const routes = [
   {
     path: '/',
+    component: () => import('layouts/AuthLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/auth/Login.vue') }
+    ]
+  },
+  {
+    path: '/room',
     component: () => import('layouts/ChatLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/chat/Index.vue') }
+      { path: '', component: () => import('pages/chat/Room.vue') }
     ]
   }
 ]

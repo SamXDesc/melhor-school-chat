@@ -1,3 +1,3 @@
-export const storeUser = ({ commit }, user) => {
-  commit('storeUser', user)
+export const storeUser = ({ commit }, name) => {
+  commit('storeUser', name)
 }

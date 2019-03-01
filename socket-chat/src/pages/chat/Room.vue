@@ -1,19 +1,19 @@
 <template>
   <q-page class="layout-padding">
     <q-scroll-area class="pScrollArea">
-      {{ domHeight }}
       <q-chat-message
         label='Sunday, 19th'
       />
 
       <q-chat-message
-        v-for="(message, index) in messages"
+        v-for="(data, index) in messages"
         :key="index"
-        :name="message.user.name === user.name ? 'me' : message.user.name"
-        avatar="http://placehold.it/100x100"
-        :text="[message.content]"
-        stamp="7 minutes ago"
-        :sent="!!(message.user.name === user.name)"
+        :name="data.user.name === user.name ? 'eu' : data.user.name"
+        :avatar="data.user.avatar"
+        :text="[data.content]"
+        :letter="'S'"
+        :stamp="data.sent | formatDate"
+        :sent="!!(data.user.name === user.name)"
       />
     </q-scroll-area>
 
@@ -46,17 +46,21 @@
   top: 0;
   height: 90%;
   width: 100%;
-  border: 2px solid red;
   padding: 0.5em;
 }
 </style>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { LocalStorage, date } from 'quasar'
+
+const formatDate = content => {
+  return date.formatDate(content, 'DD/MM/YYYY HH:mm')
+}
 
 export default {
-  name: 'PageIndex',
-  data () {
+  name: 'Room',
+  data: () => {
     return {
       text: '',
       isTyping: false
@@ -105,13 +109,20 @@ export default {
       })
 
       this.text = ''
+    },
+    hasUser () {
+      if (!LocalStorage.has('user')) {
+        this.$router.push('/')
+      } else {
+        this.storeUser(LocalStorage.get.item('user'))
+      }
     }
   },
+  filters: {
+    formatDate
+  },
   mounted () {
-    this.storeUser({
-      name: Math.random().toString(36).substring(7),
-      avatar: 'http://placehold.it/80x80'
-    })
+    this.hasUser()
   }
 }
 </script>

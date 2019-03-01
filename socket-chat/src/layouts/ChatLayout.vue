@@ -9,6 +9,12 @@
           <div v-if="typing.user && typing.message" slot="subtitle">{{ typing.user !== this.user.name ? typing.message : 'A beautiful World' }}</div>
           <div v-else slot="subtitle">A beautiful World</div>
         </q-toolbar-title>
+
+        <q-btn
+        flat round dense
+        @click="logout"
+        icon="mdi-logout"
+      />
       </q-toolbar>
     </q-layout-header>
 
@@ -19,7 +25,7 @@
 </template>
 
 <script>
-import { openURL } from 'quasar'
+import { openURL, LocalStorage } from 'quasar'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,7 +40,12 @@ export default {
     }
   },
   methods: {
-    openURL
+    openURL,
+    logout () {
+      LocalStorage.remove('user')
+
+      this.$router.push('/')
+    }
   },
   computed: {
     ...mapGetters('user', [
