@@ -4,15 +4,12 @@ import { ChatService } from './chat.service'
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(private readonly chatService: ChatService) {}
 
-
     @WebSocketServer() server;
     users: number = 0;
 
     async handleConnection(client) {
         // A client has connected
         this.users++;
-        
-       client.emit('loadMessages', await this.chatService.findAll());       
         
         // Notify connected clients of current users
         this.server.emit('userEntered', 'Um novo usuário acabou de entrar');
@@ -33,10 +30,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit('chatRoom', data);
     }
 
+    @SubscribeMessage('retrieveMessages')
+    async retrieveMessages (client) {
+        client.emit('loadMessages', await this.chatService.findAll());
+    }
+
     @SubscribeMessage('typing')
-    onEvent(client, data: any): string {
+    async onEvent(client, data: any) {
         return data.condition ? this.server.emit('whoIsTyping', { user: data.user, message: `${data.user} está digitando uma mensagem` })
             : this.server.emit('whoIsTyping', { user: data.user, message: 'A beautiful World' });
     }
-
 }

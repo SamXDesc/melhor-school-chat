@@ -94,6 +94,8 @@ export default {
       this.storeMessage(data)
     },
     loadMessages (messages) {
+      console.log('Trigged LoadMessages')
+
       messages.forEach(chat => {
         const newMessage = {
           content: chat.message,
@@ -114,6 +116,9 @@ export default {
     ...mapActions('user', [
       'storeUser'
     ]),
+    retrieveMessages () {
+      this.$socket.emit('retrieveMessages')
+    },
     send () {
       this.$socket.emit('chat', {
         content: this.text,
@@ -136,6 +141,7 @@ export default {
   },
   mounted () {
     this.hasUser()
+    this.retrieveMessages()
   }
 }
 </script>
