@@ -92,6 +92,19 @@ export default {
     },
     chatRoom (data) {
       this.storeMessage(data)
+    },
+    loadMessages (messages) {
+      messages.forEach(chat => {
+        const newMessage = {
+          content: chat.message,
+          user: {
+            avatar: chat.avatar,
+            name: chat.user
+          }
+        }
+
+        this.storeMessage(newMessage)
+      })
     }
   },
   methods: {
