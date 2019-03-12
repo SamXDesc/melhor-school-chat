@@ -12,20 +12,26 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.users++;
         
         // Notify connected clients of current users
-        this.server.emit('userEntered', 'Um novo usuário acabou de entrar');
+        this.server.emit('userEntered', {
+            users: this.users,
+            message: 'Um novo usuário acabou de entrar'
+        });
     }
 
     async handleDisconnect() {
         // A client has disconnected
         this.users--;
         // Notify connected clients of current users
-        this.server.emit('userLeft', 'Um usuário deixou a sala');
+        this.server.emit('userLeft', {
+            users: this.users,
+            message: 'Um usuário deixou a sala'
+        });
 
     }
 
     @SubscribeMessage('chat')
     async onChat(client, data) {
-        data.content = data.content.replace('/<\/?[^>]+(>|$)/g', '');
+        data.content = encodeURIComponent(data.content);
         await this.chatService.createChat(data);
         this.server.emit('chatRoom', data);
     }

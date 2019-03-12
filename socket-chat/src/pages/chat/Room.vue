@@ -2,7 +2,7 @@
   <q-page class="layout-padding">
     <q-scroll-area class="pScrollArea">
       <q-chat-message
-        label='Sunday, 19th'
+        label="Bem-vindo ao Melhor Chat"
       />
 
       <q-chat-message
@@ -87,8 +87,11 @@ export default {
     ])
   },
   sockets: {
-    connect: function () {
-      console.log('socket connected')
+    userEntered (data) {
+      this.users(data.users)
+    },
+    userLeft (data) {
+      this.users(data.users)
     },
     chatRoom (data) {
       this.storeMessage(data)
@@ -111,7 +114,8 @@ export default {
   },
   methods: {
     ...mapActions('chat', [
-      'storeMessage'
+      'storeMessage',
+      'users'
     ]),
     ...mapActions('user', [
       'storeUser'

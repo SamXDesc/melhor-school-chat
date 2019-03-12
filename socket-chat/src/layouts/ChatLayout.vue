@@ -10,11 +10,13 @@
           <div v-else slot="subtitle">A beautiful World</div>
         </q-toolbar-title>
 
+        Online: {{ usersCount }}
+
         <q-btn
-        flat round dense
-        @click="logout"
-        icon="mdi-logout"
-      />
+          flat round dense
+          @click="logout"
+          icon="mdi-logout"
+        />
       </q-toolbar>
     </q-layout-header>
 
@@ -50,6 +52,9 @@ export default {
   computed: {
     ...mapGetters('user', [
       'user'
+    ]),
+    ...mapGetters('chat', [
+      'usersCount'
     ])
   },
   sockets: {
