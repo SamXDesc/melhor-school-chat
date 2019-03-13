@@ -136,7 +136,11 @@ export default {
       if (!LocalStorage.has('user')) {
         this.$router.push('/')
       } else {
-        this.storeUser(LocalStorage.get.item('user'))
+        let user = LocalStorage.get.item('user')
+
+        this.$db.get(user).then((item) => {
+          this.storeUser(item)
+        })
       }
     }
   },

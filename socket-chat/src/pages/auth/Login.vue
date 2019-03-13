@@ -20,9 +20,18 @@ export default {
   },
   methods: {
     confirm () {
-      LocalStorage.set('user', { name: this.name, avatar: `https://api.adorable.io/avatars/70/${this.name}` })
+      this.$db.put({
+        _id: `${Date.now()}`,
+        name: this.name,
+        avatar: `https://api.adorable.io/avatars/70/${this.name}`
+      }, (err, result) => {
+        if (err) {
+          console.log(err)
+        }
 
-      this.$router.push('room')
+        LocalStorage.set('user', result.id)
+        this.$router.push('room')
+      })
     }
   },
   mounted () {
